@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Guidelines";
+}
+<h1>@ViewData["Title"]</h1>
+
+ <p>Use this page to detail your site's privacy policy.</p> <h2>Email Script Validation for Campaigning</h2> <p>Our platform offers a comprehensive email validation tool to ensure that email addresses used in campaigns are accurate, functional, and secure. This validation process includes several layers of checks to maintain the quality of data and improve the deliverability of email campaigns. Below is a breakdown of the key validation steps:</p> <h3>1. Basic Format Validation</h3> <p><strong>Purpose:</strong> To verify that the email address is structured correctly.</p> <p><strong>How:</strong> 
+The system uses a regular expression (regex) to confirm that the email follows the conventional pattern of <code>username@domain.extension</code>. 
+It ensures the email includes only valid characters (letters, numbers, periods, underscores, percentage signs, pluses, and hyphens), contains an 
+symbol, and ends with a valid domain extension like <code>.com</code> or <code>.net</code>.</p> <h3>2. Empty or Invalid Email Check</h3> <p><strong>
+Purpose:</strong> To ensure that the email field isn't left blank or filled with invalid data.</p> <p><strong>How:</strong> This step checks if the 
+email field is empty or contains invalid entries like "NaN" (Not a Number), which often indicates missing data. Emails with these values are flagged as invalid.</p> 
+<h3>3. Domain Restriction (life.com Not Allowed)</h3> <p><strong>Purpose:</strong> To prevent emails from being accepted if they originate from a restricted domain, 
+specifically <code>life.com</code>.</p> <p><strong>How:</strong> During validation, any email address that ends with <code>@@life.com</code> is automatically flagged
+as invalid and excluded from the campaign.</p> <h3>4. Email Existence Check (MX Record Lookup)</h3> <p><strong>Purpose:</strong> To verify that the domain of the email address 
+is valid and capable of receiving emails.</p> <p><strong>How:</strong> The system checks if the domain portion of the email (the part after the "@@") has valid Mail Exchange (MX) records.
+MX records are DNS records that specify where emails should be delivered. If the domain has no valid MX records, the email is considered invalid.</p>
+<h3>5. SMTP Validation (Checking if the Email Address is Reachable)</h3> <p><strong>Purpose:</strong> To verify the existence of the specific email address on the mail server.</p>
+<p><strong>How:</strong> The tool communicates with the mail server via the SMTP protocol and attempts to simulate sending a test message. If the server responds with an error code, 
+such as a "550" (indicating the email doesn't exist), the address is marked as inactive and removed from the list.</p> <h3>6. General Error Handling</h3> 
+<p><strong>Purpose:</strong> To handle unexpected issues that arise during validation.</p> <p><strong>How:</strong> In case of unforeseen issues, such as network problems or server errors, 
+the system catches these exceptions and logs them. Affected emails are flagged as invalid, ensuring data integrity and smooth campaign execution.</p> <h3>Summary</h3>
+<p>Our email validation process ensures that only valid, reachable, and properly formatted email addresses are used in your campaigns. This multi-step approach increases the
+    likelihood of successful email delivery, reduces bounce rates, and ensures compliance with industry standards for email communication.</p>
