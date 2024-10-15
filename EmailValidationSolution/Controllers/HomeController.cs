@@ -1,13 +1,11 @@
+using CsvHelper;
+using DnsClient;
 using EmailValidationSolution.Models;
 using Microsoft.AspNetCore.Mvc;
-using CsvHelper;
 using OfficeOpenXml;
 using System.Globalization;
-using System.Net.Mail;
 using System.Net.Sockets;
-using System.Text;
 using System.Text.RegularExpressions;
-using DnsClient;
 
 namespace EmailValidationSolution.Controllers
 {
@@ -18,6 +16,8 @@ namespace EmailValidationSolution.Controllers
         private readonly int _smtpTimeout = 10000; // 10 seconds
         private static int _progress = 0;
         private static List<EmailValidationModel> _validationResults = new List<EmailValidationModel>();
+        private static DateTime _startTime;
+        private static DateTime _endTime;
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -29,6 +29,7 @@ namespace EmailValidationSolution.Controllers
         {
             return View();
         }
+
 
         // POST: /Home/Index - Handle file upload and email validation
         [HttpPost]
@@ -42,6 +43,7 @@ namespace EmailValidationSolution.Controllers
 
             _validationResults.Clear();
             _progress = 0;
+            _startTime = DateTime.Now;
 
             try
             {
@@ -63,8 +65,14 @@ namespace EmailValidationSolution.Controllers
                 return View();
             }
 
+            _endTime = DateTime.Now;
+            ViewBag.StartTime = _startTime;
+            ViewBag.EndTime = _endTime;
+            ViewBag.Duration = (_endTime - _startTime).TotalSeconds;
+
             return View(_validationResults);
         }
+
 
         private async Task ProcessCsvFile(IFormFile file)
         {
@@ -114,7 +122,17 @@ namespace EmailValidationSolution.Controllers
         [HttpGet]
         public IActionResult GetProgress()
         {
-            return Json(new { progress = _progress });
+            var elapsedTime = (DateTime.Now - _startTime).TotalSeconds;
+            var estimatedTotalTime = _progress > 0 ? (elapsedTime / _progress) * 100 : 0;
+            var remainingTime = Math.Max(0, estimatedTotalTime - elapsedTime);
+
+            return Json(new
+            {
+                progress = _progress,
+                elapsedTime = Math.Round(elapsedTime, 2),
+                estimatedTotalTime = Math.Round(estimatedTotalTime, 2),
+                remainingTime = Math.Round(remainingTime, 2)
+            });
         }
 
         [HttpGet]
