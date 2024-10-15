@@ -26,10 +26,9 @@ namespace EmailValidationSolution.Models
 
     public class ImportHistory
     {
-        public int Id { get; set; }
         public string FileName { get; set; }
-        public int ValidCount { get; set; }
-        public int ActiveCount { get; set; }
         public DateTime ImportDate { get; set; }
+        public int TotalValidCount { get; set; }
+        public int TotalActiveCount { get; set; }
     }
 }

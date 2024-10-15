@@ -18,6 +18,7 @@ namespace EmailValidationSolution.Controllers
         private static List<EmailValidationModel> _validationResults = new List<EmailValidationModel>();
         private static DateTime _startTime;
         private static DateTime _endTime;
+        private static List<ImportHistory> _importHistory = new List<ImportHistory>();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -27,9 +28,9 @@ namespace EmailValidationSolution.Controllers
         // GET: /Home/Index
         public IActionResult Index()
         {
+            ViewBag.ImportHistory = _importHistory.Take(3).ToList();
             return View();
         }
-
 
         // POST: /Home/Index - Handle file upload and email validation
         [HttpPost]
@@ -70,8 +71,30 @@ namespace EmailValidationSolution.Controllers
             ViewBag.EndTime = _endTime;
             ViewBag.Duration = (_endTime - _startTime).TotalSeconds;
 
+            // Update import history
+            UpdateImportHistory(uploadedFile.FileName);
+
+            ViewBag.ImportHistory = _importHistory.Take(3).ToList();
             return View(_validationResults);
         }
+
+        private void UpdateImportHistory(string fileName)
+        {
+            var history = new ImportHistory
+            {
+                FileName = fileName,
+                ImportDate = DateTime.Now,
+                TotalValidCount = _validationResults.Count(r => r.IsValid),
+                TotalActiveCount = _validationResults.Count(r => r.IsActive)
+            };
+
+            _importHistory.Insert(0, history);
+            if (_importHistory.Count > 3)
+            {
+                _importHistory.RemoveAt(3);
+            }
+        }
+
 
 
         private async Task ProcessCsvFile(IFormFile file)

@@ -73,6 +73,30 @@
     </div>
 }
 
+<!-- History Table -->
+<h2 class="mt-5">Import History</h2>
+<table class="table table-bordered mt-3">
+    <thead>
+        <tr>
+            <th>File Name</th>
+            <th>Import Date</th>
+            <th>Total Valid Count</th>
+            <th>Total Active Count</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var history in ViewBag.ImportHistory)
+        {
+            <tr>
+                <td>@history.FileName</td>
+                <td>@history.ImportDate</td>
+                <td>@history.TotalValidCount</td>
+                <td>@history.TotalActiveCount</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
 @section Scripts {
     <script>
         $(document).ready(function () {
