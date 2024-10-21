@@ -131,7 +131,7 @@ namespace EmailValidationSolution.Controllers
                     for (int row = 2; row <= rowCount; row++)
                     {
                         var email = worksheet.Cells[row, 1].Text;
-                        if (!string.IsNullOrEmpty(email))
+                        if (!string.IsNullOrEmpty(email)) 
                         {
                             var result = await ValidateEmailAsync(email);
                             _validationResults.Add(result);
