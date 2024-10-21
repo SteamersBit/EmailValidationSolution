@@ -199,9 +199,10 @@ namespace EmailValidationSolution.Controllers
             try
             {
                 email = email.Trim().ToLower();
-
+                int i = 0;
                 if (string.IsNullOrWhiteSpace(email))
                 {
+                    i = 1;
                     result.IsValid = false;
                     result.Reason = "Empty or invalid email";
                     return result;
@@ -209,6 +210,7 @@ namespace EmailValidationSolution.Controllers
 
                 if (!ValidateBasicFormat(email))
                 {
+                    i = 1;
                     result.IsValid = false;
                     result.Reason = "Invalid email format";
                     return result;
@@ -217,12 +219,17 @@ namespace EmailValidationSolution.Controllers
                 // Check for life.com domain
                 if (email.Split('@')[1] == "life.com")
                 {
+                    i = 1;
                     result.IsValid = false;
                     result.Reason = "life.com domain is not allowed";
                     return result;
                 }
+                if(i == 0)
+                {
 
-                (result.IsActive, result.Reason) = await VerifyEmailExistenceAsync(email);
+                    (result.IsActive, result.Reason) = await VerifyEmailExistenceAsync(email);
+                }
+
             }
             catch (Exception ex)
             {
